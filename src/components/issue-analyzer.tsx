@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect, useRef } from 'react';
+import { useActionState, useEffect, useRef } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -67,7 +67,7 @@ function FormContent({ formAction }: { formAction: (payload: FormData) => void }
 
 
 export default function IssueAnalyzer() {
-  const [state, formAction] = useFormState(getGuidance, initialState);
+  const [state, formAction] = useActionState(getGuidance, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
