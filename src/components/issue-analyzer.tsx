@@ -33,11 +33,42 @@ function SubmitButton() {
   );
 }
 
+function FormContent({ formAction }: { formAction: (payload: FormData) => void }) {
+  const { pending } = useFormStatus();
+  const formRef = useRef<HTMLFormElement>(null);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      event.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  };
+
+  return (
+    <>
+      <form ref={formRef} action={formAction} className="space-y-4">
+        <Textarea
+          name="issueDescription"
+          placeholder="For example: 'I have been working for over 10 hours a day without overtime pay for the last 3 months...'"
+          className="min-h-[150px] text-base resize-y"
+          required
+          onKeyDown={handleKeyDown}
+        />
+        <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-muted-foreground text-center sm:text-left">
+            Press Ctrl+Enter (or ⌘+Enter) to submit
+          </p>
+          <SubmitButton />
+        </div>
+      </form>
+      {pending && <GuidanceSkeleton />}
+    </>
+  );
+}
+
+
 export default function IssueAnalyzer() {
   const [state, formAction] = useFormState(getGuidance, initialState);
   const { toast } = useToast();
-  const { pending } = useFormStatus();
-  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state.error) {
@@ -49,13 +80,6 @@ export default function IssueAnalyzer() {
     }
   }, [state, toast]);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-      event.preventDefault();
-      formRef.current?.requestSubmit();
-    }
-  };
-
   return (
     <div className="space-y-8">
       <Card className="shadow-lg">
@@ -66,27 +90,11 @@ export default function IssueAnalyzer() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form ref={formRef} action={formAction} className="space-y-4">
-            <Textarea
-              name="issueDescription"
-              placeholder="For example: 'I have been working for over 10 hours a day without overtime pay for the last 3 months...'"
-              className="min-h-[150px] text-base resize-y"
-              required
-              onKeyDown={handleKeyDown}
-            />
-            <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
-              <p className="text-xs text-muted-foreground text-center sm:text-left">
-                Press Ctrl+Enter (or ⌘+Enter) to submit
-              </p>
-              <SubmitButton />
-            </div>
-          </form>
+          <FormContent formAction={formAction} />
         </CardContent>
       </Card>
-
-      {pending && <GuidanceSkeleton />}
-
-      {state.data && <GuidanceDisplay result={state.data} />}
+      
+      {state.data && !state.error && <GuidanceDisplay result={state.data} />}
 
       <Alert variant="default" className="bg-card border-primary/20">
         <Info className="h-4 w-4 text-primary" />
