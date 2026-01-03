@@ -11,11 +11,27 @@ import { getGuidance } from '@/app/actions';
 import GuidanceDisplay from './guidance-display';
 import { useToast } from "@/hooks/use-toast";
 import GuidanceSkeleton from './guidance-skeleton';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from './ui/label';
 
 const initialState = {
   data: null,
   error: null,
 };
+
+const issueCategories = [
+  "Salary / Wage Issues",
+  "PF / ESI Issues",
+  "Wrongful Termination",
+  "Overtime / Work Hours",
+  "Other",
+];
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -45,14 +61,35 @@ function FormContent({ formAction }: { formAction: (payload: FormData) => void }
 
   return (
     <>
-      <form ref={formRef} action={formAction} className="space-y-4">
-        <Textarea
-          name="issueDescription"
-          placeholder="For example: 'I have been working for over 10 hours a day without overtime pay for the last 3 months...'"
-          className="min-h-[150px] text-base resize-y"
-          required
-          onKeyDown={handleKeyDown}
-        />
+      <form ref={formRef} action={formAction} className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="issueCategory">Select an issue category</Label>
+          <Select name="issueCategory" defaultValue="Other">
+            <SelectTrigger id="issueCategory" className="w-full">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              {issueCategories.map(category => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="issueDescription">Describe your issue in detail</Label>
+          <Textarea
+            id="issueDescription"
+            name="issueDescription"
+            placeholder="For example: 'I have been working for over 10 hours a day without overtime pay for the last 3 months...'"
+            className="min-h-[150px] text-base resize-y"
+            required
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
         <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground text-center sm:text-left">
             Press Ctrl+Enter (or ⌘+Enter) to submit
@@ -94,15 +131,28 @@ export default function IssueAnalyzer() {
         </CardContent>
       </Card>
       
-      {state.data && !state.error && <GuidanceDisplay result={state.data} />}
+      {state.data && !state.error && (
+        <div className="space-y-8">
+          <GuidanceDisplay result={state.data} />
+          <Alert variant="default" className="bg-card border-primary/20">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertTitle className="font-headline">Disclaimer</AlertTitle>
+            <AlertDescription>
+              ⚠️ This platform provides informational guidance only. It does not constitute legal advice. Please consult official government authorities or legal professionals for formal action.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
 
-      <Alert variant="default" className="bg-card border-primary/20">
-        <Info className="h-4 w-4 text-primary" />
-        <AlertTitle className="font-headline">Disclaimer</AlertTitle>
-        <AlertDescription>
-          The information provided by this tool is for informational purposes only and does not constitute legal advice. Please consult with a qualified professional for advice on your specific situation.
-        </AlertDescription>
-      </Alert>
+      {!state.data && (
+         <Alert variant="default" className="bg-card border-primary/20">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertTitle className="font-headline">Disclaimer</AlertTitle>
+            <AlertDescription>
+              The information provided by this tool is for informational purposes only and does not constitute legal advice. Please consult with a qualified professional for advice on your specific situation.
+            </AlertDescription>
+          </Alert>
+      )}
     </div>
   );
 }

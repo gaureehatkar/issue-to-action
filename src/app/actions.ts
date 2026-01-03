@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 const formSchema = z.object({
   issueDescription: z.string().min(50, 'Please provide a more detailed description of your issue (at least 50 characters).'),
+  issueCategory: z.string(),
 });
 
 interface ActionState {
@@ -18,18 +19,23 @@ export async function getGuidance(
 ): Promise<ActionState> {
   const validatedFields = formSchema.safeParse({
     issueDescription: formData.get('issueDescription'),
+    issueCategory: formData.get('issueCategory') || 'Other',
   });
 
   if (!validatedFields.success) {
+    const fieldErrors = validatedFields.error.flatten().fieldErrors;
+    const errorMessage = fieldErrors.issueDescription?.join(', ') || 'Invalid input.';
     return {
       data: null,
-      error: validatedFields.error.flatten().fieldErrors.issueDescription?.join(', ') ?? 'Invalid input.',
+      error: errorMessage,
     };
   }
+  
+  const issueWithCategory = `Category: ${validatedFields.data.issueCategory}\n\nIssue: ${validatedFields.data.issueDescription}`;
 
   try {
     const result = await analyzeIssueAndProvideGuidance({
-      issueDescription: validatedFields.data.issueDescription,
+      issueDescription: issueWithCategory,
     });
     return { data: result, error: null };
   } catch (e) {
