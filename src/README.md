@@ -59,3 +59,11 @@ npm run dev
 Open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
 
 You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
+
+## Future Improvements
+
+*   **Integrate a Verified Knowledge Base:** Augment the AI's general knowledge by implementing Retrieval-Augmented Generation (RAG). This would involve fetching information from a curated database of specific, up-to-date labor laws and government schemes to ensure guidance is accurate and verifiable.
+*   **Multilingual Support:** Add support for multiple languages to make the tool accessible to a wider range of workers.
+*   **User Accounts & History:** Allow users to create accounts to save their issue history and track the guidance they've received.
+*   **Enhanced Error Handling:** Implement more robust, user-friendly error messages for cases when the AI service is down or returns an unexpected response.
+*   **UI/UX Refinements:** Continue to improve UI consistency and the overall user experience across all flows based on user feedback.
