@@ -1,6 +1,6 @@
 # Issue-to-Action AI: Your Guide to Labor Rights
 
-This project was built in Firebase Studio.
+Firebase Studio was used as a development accelerator to scaffold the project. The team actively designed the system architecture, AI flows, UX improvements, and ethical safeguards, and iteratively refined the MVP based on product and judge-facing considerations.
 
 ## 1. Problem & Solution
 
