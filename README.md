@@ -1,6 +1,6 @@
 # Issue-to-Action AI: Your Guide to Labor Rights
 
-Firebase Studio was used as a development accelerator to scaffold the project. The team actively designed the system architecture, AI flows, UX improvements, and ethical safeguards, and iteratively refined the MVP based on product and judge-facing considerations.
+Firebase Studio was used as a development accelerator to scaffold the project. The team actively designed the system architecture, AI flows, UX improvements, and ethical safeguards, and iteratively refined the MVP based on product and judge-facing considerations. While Firebase Studio accelerated initial setup, key UX and state management decisions—such as preserving user input alongside AI output—were intentionally designed to improve clarity and trust.
 
 ## 1. Problem & Solution
 
